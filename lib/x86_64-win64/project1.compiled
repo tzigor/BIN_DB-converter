@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Compiler Value="C:\lazarus\fpc\3.2.2\bin\x86_64-win64\fpc.exe" Date="1429738194"/>
+  <Params Value=" -MObjFPC -Scghi -CX -O1 -gw2 -godwarfsets -gl -Xg -Xs -XX -WG -l -vewnhibq -FiC:\Users\ITsukanov\Documents\Lazarus\BIN_DB-converter\lib\x86_64-win64 -FuC:\lazarus\components\synapse -FuC:\lazarus\components\synapse\source\lib\lib -FuC:\lazarus\lcl\units\x86_64-win64\win32 -FuC:\lazarus\lcl\units\x86_64-win64 -FuC:\lazarus\components\freetype\lib\x86_64-win64 -FuC:\lazarus\components\lazutils\lib\x86_64-win64 -FuC:\lazarus\packager\units\x86_64-win64 -FuC:\Users\ITsukanov\Documents\Lazarus\BIN_DB-converter\ -FUC:\Users\ITsukanov\Documents\Lazarus\BIN_DB-converter\lib\x86_64-win64\ -FEC:\Users\ITsukanov\Documents\Lazarus\BIN_DB-converter\ -oC:\Users\ITsukanov\Documents\Lazarus\BIN_DB-converter\project1.exe -dLCL -dLCLwin32 project1.lpr"/>
+</CONFIG>
