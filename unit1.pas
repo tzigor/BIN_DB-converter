@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
-  Grids, ExtCtrls, StrUtils, LConvEncoding, Utils;
+  Grids, ExtCtrls, StrUtils, LConvEncoding, Utils, LCLType, Buttons;
 
 type
 
@@ -367,49 +367,55 @@ procedure TBIN_DB.ConvertDataClick(Sender: TObject);
 var fileLen, ProgressCounter: longWord;
     RecordLength: Word;
     RecordType: Char;
+    FileCheck: String4;
 begin
   if OpenDialog1.Execute then begin
      FileName.Text:= OpenDialog1.FileName;
      setLength(DataChannels, 0);
      Bytes:= LoadByteArray(OpenDialog1.FileName);
      fileLen:= length(Bytes);
-     SetLength(OutBytes, fileLen);
-     ToolInfo.Text:= '';
-     Counter:= 0;
-     OutCounter:= 0;
-     Progress.Position:= 0;
-     Progress.Max:= fileLen;
-     ProgressCounter:= 0;
-     repeat
-        RecordLength:= Bytes[Counter];
-        Counter:= Counter + 1;
-        RecordLength:= (RecordLength or (Bytes[Counter] shl 8)) - 1;
-        Counter:= Counter + 1;
-        RecordType:= Chr(Bytes[Counter]);
-        Counter:= Counter + 1;
-        GetData(RecordLength);
-        if RecordType = 'P' then begin
-           CopyRecord('P', RecordLength);
-           ToolInfo.Text:= ToolInfo.Text + DataToStr + Line;
-        end
-        else if RecordType = 'M' then CopyRecord('M', RecordLength)
-             else if RecordType = 'F' then CopyRecord('F', RecordLength)
-                  else if RecordType = 'B' then
-                  CopyRecord('B', RecordLength)
-                       else if RecordType = 'D' then begin
-                               ComposeDataChannelV3(ParseDataChannel(RecordLength));
-                            end;
-        ProgressCounter:= ProgressCounter + 1;
-        Progress.Position:= Progress.Position + 1;
-        if ProgressCounter > 100 then begin
-           Progress.Position:= Counter;
-           ProgressCounter:= 0;
-        end;
-     until Counter >= fileLen;
-     SetLength(OutBytes, OutCounter);
-     SaveByteArray(OutBytes, ReplaceText(OpenDialog1.FileName,'.bin_db','') + '_converted.bin_db');
+     if fileLen > 1000 then FileCheck:= Chr(Bytes[2]) + Chr(Bytes[3]) + Chr(Bytes[4]) + Chr(Bytes[5]);
+     if FileCheck = 'PFFV' then begin
+       Bytes[8]:= Ord('3');
+       SetLength(OutBytes, fileLen);
+       ToolInfo.Text:= '';
+       Counter:= 0;
+       OutCounter:= 0;
+       Progress.Position:= 0;
+       Progress.Max:= fileLen;
+       ProgressCounter:= 0;
+       repeat
+          RecordLength:= Bytes[Counter];
+          Counter:= Counter + 1;
+          RecordLength:= (RecordLength or (Bytes[Counter] shl 8)) - 1;
+          Counter:= Counter + 1;
+          RecordType:= Chr(Bytes[Counter]);
+          Counter:= Counter + 1;
+          GetData(RecordLength);
+          if RecordType = 'P' then begin
+             CopyRecord('P', RecordLength);
+             ToolInfo.Text:= ToolInfo.Text + DataToStr + Line;
+          end
+          else if RecordType = 'M' then CopyRecord('M', RecordLength)
+               else if RecordType = 'F' then CopyRecord('F', RecordLength)
+                    else if RecordType = 'B' then
+                    CopyRecord('B', RecordLength)
+                         else if RecordType = 'D' then begin
+                                 ComposeDataChannelV3(ParseDataChannel(RecordLength));
+                              end;
+          ProgressCounter:= ProgressCounter + 1;
+          Progress.Position:= Progress.Position + 1;
+          if ProgressCounter > 100 then begin
+             Progress.Position:= Counter;
+             ProgressCounter:= 0;
+          end;
+       until Counter >= fileLen;
+       SetLength(OutBytes, OutCounter);
+       SaveByteArray(OutBytes, ReplaceText(OpenDialog1.FileName,'.bin_db','') + '_converted.bin_db');
+     end
+     else Application.MessageBox('Wrong file format','Error', MB_ICONERROR + MB_OK);
+   end;
      //ShowMessage('File converted');
-  end;
 end;
 
 end.

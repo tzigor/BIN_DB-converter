@@ -58,6 +58,8 @@ object BIN_DB: TBIN_DB
     Text = 'File:'
   end
   object OpenDialog1: TOpenDialog
+    DefaultExt = '.BIN_DB'
+    Filter = 'BIN_DB|*.BIN_DB'
     Left = 376
     Top = 8
   end
